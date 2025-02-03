@@ -107,7 +107,11 @@
             </ul>
         </div>
     </aside>
+
+
     <div class="p-8 pt-24 sm:ml-64">
+    <h1>halaman create</h1>
+
         <form action="{{ route('siswa.store') }}" method="POST">
             @csrf
             <div class="grid gap-6 mb-6 md:grid-cols-2">

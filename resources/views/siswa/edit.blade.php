@@ -107,7 +107,10 @@
             </ul>
         </div>
     </aside>
+
+
     <div class="p-8 pt-24 sm:ml-64">
+    <h1>halaman edit</h1>
         <form action="{{ route('siswa.update', $siswa->nis) }}" method="POST">
             @csrf
             @method('PUT')

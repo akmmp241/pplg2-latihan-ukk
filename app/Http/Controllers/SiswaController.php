@@ -5,15 +5,39 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Siswa;
 use Illuminate\Database\UniqueConstraintViolationException;
+use App\Http\Middleware\AdminMiddleware;
+use Illuminate\Routing\Controllers\HasMiddleware;
+use Illuminate\Routing\Controllers\Middleware;
 
-class SiswaController extends Controller
+class SiswaController extends Controller implements HasMiddleware
 {
+
+    public static function middleware(): array
+    {
+        return [
+            new Middleware(
+                AdminMiddleware::class, 
+                only: ['edit', 'update', 'destroy']
+            ),
+        ];
+    }
+
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $allSiswa = Siswa::all();
+        $search = $request->query("search");
+
+        $allSiswa = Siswa::query();
+
+        if ($search != null) {
+            $allSiswa = $allSiswa->where('nama', 'like', "%$search%")
+                ->orWhere('nis', 'like', "%$search%")
+                ->orWhere('kelas', 'like', "%$search%");
+        }
+
+        $allSiswa = $allSiswa->get();
 
         return view('siswa.index', compact('allSiswa'));
     }
