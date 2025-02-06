@@ -28,6 +28,7 @@ class SiswaController extends Controller implements HasMiddleware
     public function index(Request $request)
     {
         $search = $request->query("search");
+        $class = $request->query("kelas");
 
         $allSiswa = Siswa::query();
 
@@ -37,9 +38,15 @@ class SiswaController extends Controller implements HasMiddleware
                 ->orWhere('kelas', 'like', "%$search%");
         }
 
+        if ($class != null) {
+            $allSiswa = $allSiswa->where('kelas', $class);
+        }
+
         $allSiswa = $allSiswa->get();
 
-        return view('siswa.index', compact('allSiswa'));
+        $classes = Siswa::select('kelas')->distinct()->get();
+
+        return view('siswa.index', compact('allSiswa', 'classes'));
     }
 
     /**
